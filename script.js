@@ -5,10 +5,31 @@ let script = () => {
 	let buildPyramidButton = document.getElementById("buildPyramid");
 	let table = document.getElementsByTagName("table")[0];
 
+	let arraySimpleNumber = [];
+	
 	let checkSimple = (a) => {
-		for (let i = 2; i < a; i++) {
-			if (a % i == 0) {
-				return false;
+		if (a == 1)
+			return false;
+			
+		if (a == 2) 
+			return true;
+		
+		if (a % 2 == 0)
+			return false;
+		
+		let n = Math.ceil(Math.sqrt(a));
+		
+		if (arraySimpleNumber[arraySimpleNumber.length - 1] >= n) {
+			for (let i = 0; i < arraySimpleNumber.length && arraySimpleNumber[i] <= n; i++) {
+				if (a % arraySimpleNumber[i] == 0) {
+					return false;
+				}
+			}
+		} else {
+			for (let i = 2; i <= n; i++) {
+				if (a % i == 0) {
+					return false;
+				}
 			}
 		}
 		return true;
@@ -33,8 +54,9 @@ let script = () => {
 				tr.appendChild(tdEmpty);
 			}
 
-			if (checkSimple(i) && i != 1) {
+			if (checkSimple(i)) {
 				td.classList.add("simple");
+				arraySimpleNumber.push(i);
 			}
 
 			td.innerHTML = i;
