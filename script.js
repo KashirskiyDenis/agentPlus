@@ -5,8 +5,6 @@ let script = () => {
 	let buildPyramidButton = document.getElementById("buildPyramid");
 	let table = document.getElementsByTagName("table")[0];
 
-	let arraySimpleNumber = [];
-	
 	let checkSimple = (a) => {
 		if (a == 1)
 			return false;
@@ -17,61 +15,62 @@ let script = () => {
 		if (a % 2 == 0)
 			return false;
 		
-		let n = Math.ceil(Math.sqrt(a));
+		if (a != 5 && a % 5 == 0)
+			return false;
 		
-		if (arraySimpleNumber[arraySimpleNumber.length - 1] >= n) {
-			for (let i = 0; i < arraySimpleNumber.length && arraySimpleNumber[i] <= n; i++) {
-				if (a % arraySimpleNumber[i] == 0) {
-					return false;
-				}
-			}
-		} else {
-			for (let i = 2; i <= n; i++) {
-				if (a % i == 0) {
-					return false;
-				}
-			}
+		let n = Math.ceil(Math.sqrt(a));
+
+		for (let i = 3; i <= n; i+=2) {
+			if (a % i == 0)
+				return false;
 		}
+
 		return true;
 	};
 
 
 	let buildPyramid = (e) => {
-		table.innerHTML = "";
 		let inString = 1;
 		let count = 1;
 		let a = Math.pow(input.value, 2);
 		let start = input.value;
-		let tr = document.createElement("tr");
+		let trHTMLAll = [];
+		let trHTMLOne = "<tr>";
 
+		table.innerHTML = "";
+		
 		for (let i = 1; i <= a; i++) {
-			let td = document.createElement("td");
-			td.classList.add("border");
+			let tdHTML = "<td class=\"border";
 
 			if (count == 1 && start != 1) {
-				let tdEmpty = document.createElement("td");
-				tdEmpty.setAttribute("colspan", start - 1);
-				tr.appendChild(tdEmpty);
+				let tdEmptyHTML = "<td colspan=\"" + (start - 1) + "\"></td>";
+				trHTMLOne += tdEmptyHTML;
 			}
 
 			if (checkSimple(i)) {
-				td.classList.add("simple");
-				arraySimpleNumber.push(i);
+				tdHTML += " simple\">";
+			} else {
+				tdHTML += "\">";
 			}
-
-			td.innerHTML = i;
-			tr.appendChild(td);
+		
+			tdHTML += i + "</td>";
+			trHTMLOne += tdHTML;
 
 			if (count == inString) {
 				count = 0;
 				inString += 2;
 				start--;
-				table.appendChild(tr);
-				tr = document.createElement("tr");
+				
+				trHTMLOne += "</tr>";
+				trHTMLAll.push(trHTMLOne);
+				trHTMLOne = "<tr>";
 			}
 
 			count++;
 		}
+		
+		let html = trHTMLAll.join('');
+		table.innerHTML = html;
 	};
 
 	buildPyramidButton.addEventListener("click", buildPyramid);
